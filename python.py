@@ -147,7 +147,7 @@ else:
 for i in url:
     check_for_duplicates("/home/fatma")
 
-
+'''
 
 
 
