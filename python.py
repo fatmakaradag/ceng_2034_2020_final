@@ -56,26 +56,60 @@ os.wait() #Both the parent process and the child process competes for the CPU wi
 
 
     
+
+'''
+b = []
 def url_duplicate():
-    
+   
     for filename in os.listdir('.'):
         if os.path.isfile(filename):
-           filehash=md5.md5(file(filename).read()).hexdigest()
-        if filehash not in b:
-           b.append(filehash)
-        else:
-            print (b[filehash])
- 
-b=[]
-           
-for i in range(multiprocessing.cpu_count()):
-    b.append(Process(target=url_duplicate,))
-     
-for process in b:
-    process.start()
-for process in b:
-    process.join()      
+          filehash = hashlib.md5(open(filename, "rb").read()).hexdigest()
+          if filehash not in b:
+            b.append(filehash)
+          else:
+            print(b)
+'''
+files = []
+file_names = []
+def url_duplicates(dir):
+    for filename in os.listdir(dir):
+        if os.path.isfile(filename):
+          file_names.append(filename)
+          filehash = hashlib.md5(open(filename, "rb").read()).hexdigest()
+          files.append(filehash)
+url_duplicates(os.getcwd())
 
+duplicates = []
+unique = []
+indexes = []
+index = 0
+def find_duplicates(array):
+  for i in files:
+    global index
+    if i not in unique:
+        unique.append(i)
+    else:
+        duplicates.append(i)
+        print(file_names[index])
+        indexes.append(index)
+    index += 1
+
+print("Duplicate files: ")
+find_duplicates(files)
+print("Hexadecimal format of the duplicate files: ")
+print(duplicates)
+
+'''          #It finds duplicates but when it is done with the process it prints four times so I got the process part in the comment.
+processes = []           
+for i in range(multiprocessing.cpu_count()):
+    processes.append(Process(target=find_duplicates, args=(files,)))
+     
+for process in processes:
+    process.start()
+for process in processes:
+    process.join()
+
+''' 
 
  
 '''   
